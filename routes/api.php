@@ -16,3 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('cities', 'API\CityController@store');
+Route::post('cities/{city}/delivery-times', 'API\CityController@attatchDeliveryTimes');
+Route::post('delivery-times', 'API\DeliveryTimeController@store');
