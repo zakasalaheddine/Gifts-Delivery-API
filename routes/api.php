@@ -21,3 +21,4 @@ Route::post('cities', 'API\CityController@store');
 Route::post('cities/{city}/delivery-times', 'API\CityController@attatchDeliveryTimes');
 Route::post('delivery-times', 'API\DeliveryTimeController@store');
 Route::post('cities/{city}/exclude-date', 'API\CityController@excludeDate');
+Route::get('cities/{city}/delivery-dates-times/{days}', 'API\DeliveryDateController@getDeliveryDateTimes');
