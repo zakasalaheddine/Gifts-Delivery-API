@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('cities', 'API\CityController@store');
 Route::post('cities/{city}/delivery-times', 'API\CityController@attatchDeliveryTimes');
 Route::post('delivery-times', 'API\DeliveryTimeController@store');
+Route::post('cities/{city}/exclude-date', 'API\CityController@excludeDate');
