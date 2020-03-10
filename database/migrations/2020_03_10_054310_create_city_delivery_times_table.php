@@ -17,7 +17,7 @@ class CreateCityDeliveryTimesTable extends Migration
             $table->increments('id');
             $table->integer('city_id');
             $table->integer('delivery_time_id');
-            $table->text('excluding_dates');
+            $table->text('excluding_dates')->nullable();
             $table->timestamps();
         });
     }
