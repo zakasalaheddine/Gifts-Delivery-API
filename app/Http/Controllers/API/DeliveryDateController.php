@@ -15,7 +15,8 @@ class DeliveryDateController extends Controller
     {
         $cityDeliveryTimes = CityDeliveryTime::where('city_id', $city->id)
             ->get();
-        $deliveryTimes = DeliveryTime::whereIn('id', $cityDeliveryTimes->pluck(['delivery_time_id']))
+        $deliveryTimes = DeliveryTime::whereIn('id', $cityDeliveryTimes
+        ->pluck(['delivery_time_id']))
             ->get();
 
         $data = [];
@@ -23,7 +24,8 @@ class DeliveryDateController extends Controller
             $date = Carbon::now()->addDay($i);
             $validIds = [];
             foreach ($cityDeliveryTimes as $value) {
-                if ($value->excluding_dates != null && !in_array($date->format("d-m-yy"), json_decode($value->excluding_dates))) {
+                if ($value->excluding_dates != null && !in_array($date->format("d-m-yy"), 
+                json_decode($value->excluding_dates))) {
                     array_push($validIds, $value->delivery_time_id);
                 }
             }
