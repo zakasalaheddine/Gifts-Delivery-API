@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\City;
 use App\CityDeliveryTime;
 use App\DeliveryTime;
+use App\ExludedDates;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -15,28 +16,28 @@ class DeliveryDateController extends Controller
     {
         $cityDeliveryTimes = CityDeliveryTime::where('city_id', $city->id)
             ->get();
-        $deliveryTimes = DeliveryTime::whereIn('id', $cityDeliveryTimes
-        ->pluck(['delivery_time_id']))
-            ->get();
-
         $data = [];
         for ($i = 0; $i < $days; $i++) {
             $date = Carbon::now()->addDay($i);
-            $validIds = [];
-            foreach ($cityDeliveryTimes as $value) {
-                if ($value->excluding_dates != null && !in_array($date->format("d-m-yy"), 
-                json_decode($value->excluding_dates))) {
-                    array_push($validIds, $value->delivery_time_id);
+            $exludedDates = ExludedDates::wherein('cityDeliveryTime_id', $cityDeliveryTimes
+                    ->pluck(['delivery_time_id']))
+                    ->where('date', $date->format("Y-m-d"))
+                    ->get();
+            $valideTimes = [];
+            foreach ($cityDeliveryTimes as $cityDeliveryTime) {
+                $currentExcludeDate = $exludedDates->where('cityDeliveryTime_id', $cityDeliveryTime->id)->first();
+                if (!$currentExcludeDate) {
+                    $valideTimes[] = [$cityDeliveryTime->deliveryTime];
                 }
             }
-            $results = $deliveryTimes->whereIn('id', $validIds);
-            array_push($data, [
-                'day_name' => $date->englishDayOfWeek,
-                'date' => $date->format("d-m-yy"),
-                'delivery_times' => $results,
-            ]);
+            if (count($valideTimes) > 0) {
+                $data[] = [
+                    'day_name' => $date->englishDayOfWeek,
+                    'date' => $date->format("d-m-yy"),
+                    'delivery_times' => $valideTimes,
+                ];
+            }
         }
-        // return response()->json($deliveryTimes);
         return response()->json(['dates' => $data]);
     }
 }

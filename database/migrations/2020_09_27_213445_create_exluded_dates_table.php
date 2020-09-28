@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCityDeliveryTimesTable extends Migration
+class CreateExludedDatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateCityDeliveryTimesTable extends Migration
      */
     public function up()
     {
-        Schema::create('city_delivery_times', function (Blueprint $table) {
+        Schema::create('exluded_dates', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('city_id');
-            $table->integer('delivery_time_id');
+            $table->date('date');
+            $table->integer('cityDeliveryTime_id');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateCityDeliveryTimesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('city_delivery_times');
+        Schema::dropIfExists('exluded_dates');
     }
 }
